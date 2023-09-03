@@ -2,11 +2,23 @@
 TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
 
 # Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
+
+## Setup storage account for terraform
+
+```sh
+RESOURCE_GROUP_NAME=Azure-Lab
+STORAGE_ACCOUNT_NAME=takiazurelab
+CONTAINER_NAME=tfstate
+
+# Create resource group
+az group create --name $RESOURCE_GROUP_NAME --location centralus
+
+# Create storage account
+az storage account create --resource-group $RESOURCE_GROUP_NAME --name $STORAGE_ACCOUNT_NAME --sku Standard_LRS --encryption-services blob
+
+# Create blob container
+az storage container create --name $CONTAINER_NAME --account-name $STORAGE_ACCOUNT_NAME
+```
 
 # Build and Test
 TODO: Describe and show how to build your code and run the tests. 

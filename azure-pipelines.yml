@@ -10,20 +10,58 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-steps:
-  - task: AzureStaticWebApp@0
-    inputs:
-      app_location: 'web'
-      skip_app_build: true
-      skip_api_build: true
-      verbose: true
-      deployment_environment: 'dev'
-      production_branch: 'main'
-      
-  - script: echo Hello, world!
-    displayName: "Run a one-line script"
+stages:
+  - stage: create static web app
+    jobs:
+      - job: Init
+        steps:
+          - task: TerraformInstaller@1
+            displayName: install terraform
+            inputs:
+              terraformVersion: '1.5.6'
+          - task: TerraformTaskV4@4
+            displayName: terraform init
+            inputs:
+              provider: 'azurerm'
+              command: 'init'
+              backendServiceArm: 'arm-subscription'
+              backendAzureRmResourceGroupName: 'Azure-Lab'
+              backendAzureRmStorageAccountName: 'takiazurelab'
+              backendAzureRmContainerName: 'tfstate'
+              backendAzureRmKey: 'static-web-app'
+          - task: TerraformTaskV4@4
+            displayName: terraform plan
+            inputs:
+              command: 'plan'
+              commandOptions: '-out main.tfplan'
+              environmentServiceNameAzureRM: 'arm-subscription'
+          - task: TerraformTaskV4@4
+            displayName: terraform apply
+            inputs:
+              command: 'apply'
+              commandOptions: 'main.tfplan -auto-approve'
+              environmentServiceNameAzureRM: 'arm-subscription'
 
-  - script: |
-      echo Add other tasks to build, test, and deploy your project.
-      echo See https://aka.ms/yaml
-    displayName: "Run a multi-line script"
+  - stage: deploy code
+    jobs:
+      - job: Init
+        steps:
+          - task: AzureCLI@2
+            displayName: 'Get Deployment Token'
+            inputs:
+              azureSubscription: arm-subscription
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: |
+                APIKEY=$(az staticwebapp secrets list --name $(staticWebAppName) | jq -r '.properties.apiKey')
+                echo '##vso[task.setvariable variable=apiKey;issecret=true]$APIKEY'
+          - task: AzureStaticWebApp@0
+            displayName: 'Deploy Static Web App'
+            inputs:
+              app_location: 'web'
+              skip_app_build: true
+              skip_api_build: true
+              verbose: true
+              deployment_environment: 'dev'
+              production_branch: 'main'
+              azure_static_web_apps_api_token: $(apiKey)
