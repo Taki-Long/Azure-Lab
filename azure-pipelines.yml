@@ -11,36 +11,36 @@ pool:
   vmImage: ubuntu-latest
 
 stages:
-  - stage: CreateStaticWebApp
-    jobs:
-      - job: CreateStaticWebApp
-        steps:
-          - task: TerraformInstaller@1
-            displayName: Install terraform
-            inputs:
-              terraformVersion: '1.5.6'
-          - task: TerraformTaskV4@4
-            displayName: Terraform init
-            inputs:
-              provider: 'azurerm'
-              command: 'init'
-              backendServiceArm: 'arm-subscription'
-              backendAzureRmResourceGroupName: 'Azure-Lab'
-              backendAzureRmStorageAccountName: 'takiazurelab'
-              backendAzureRmContainerName: 'tfstate'
-              backendAzureRmKey: 'static-web-app'
-          - task: TerraformTaskV4@4
-            displayName: Terraform plan
-            inputs:
-              command: 'plan'
-              commandOptions: '-out main.tfplan'
-              environmentServiceNameAzureRM: 'arm-subscription'
-          - task: TerraformTaskV4@4
-            displayName: Terraform apply
-            inputs:
-              command: 'apply'
-              commandOptions: '-auto-approve main.tfplan'
-              environmentServiceNameAzureRM: 'arm-subscription'
+  # - stage: CreateStaticWebApp
+  #   jobs:
+  #     - job: CreateStaticWebApp
+  #       steps:
+  #         - task: TerraformInstaller@1
+  #           displayName: Install terraform
+  #           inputs:
+  #             terraformVersion: '1.5.6'
+  #         - task: TerraformTaskV4@4
+  #           displayName: Terraform init
+  #           inputs:
+  #             provider: 'azurerm'
+  #             command: 'init'
+  #             backendServiceArm: 'arm-subscription'
+  #             backendAzureRmResourceGroupName: 'Azure-Lab'
+  #             backendAzureRmStorageAccountName: 'takiazurelab'
+  #             backendAzureRmContainerName: 'tfstate'
+  #             backendAzureRmKey: 'static-web-app'
+  #         - task: TerraformTaskV4@4
+  #           displayName: Terraform plan
+  #           inputs:
+  #             command: 'plan'
+  #             commandOptions: '-out main.tfplan'
+  #             environmentServiceNameAzureRM: 'arm-subscription'
+  #         - task: TerraformTaskV4@4
+  #           displayName: Terraform apply
+  #           inputs:
+  #             command: 'apply'
+  #             commandOptions: '-auto-approve main.tfplan'
+  #             environmentServiceNameAzureRM: 'arm-subscription'
 
   - stage: DeployStaticWebApp
     jobs:
@@ -55,6 +55,10 @@ stages:
               inlineScript: |
                 APIKEY=$(az staticwebapp secrets list --name azure-lab --output json | jq -r '.properties.apiKey')
                 echo '##vso[task.setvariable variable=apiKey;issecret=true]$APIKEY'
+          - task: Bash@3
+            inputs:
+              targetType: 'inline'
+              script: echo '$(apiKey)'
           - task: AzureStaticWebApp@0
             displayName: Deploy code
             inputs:
