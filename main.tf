@@ -1,14 +1,5 @@
 terraform {
-  required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "~>3.0"
-    }
-  }
-}
-
-provider "azurerm" {
-  features {}
+  backend "local" {}
 }
 
 data "azurerm_resource_group" "azure_lab" {
@@ -19,6 +10,6 @@ resource "azurerm_static_site" "azure_lab" {
   name                = "azure-lab"
   location            = data.azurerm_resource_group.azure_lab.location
   resource_group_name = data.azurerm_resource_group.azure_lab.name
-  sku_tier = "Free"
-  sku_size = "Free"
+  sku_tier            = "Free"
+  sku_size            = "Free"
 }
