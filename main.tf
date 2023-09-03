@@ -1,5 +1,5 @@
 terraform {
-  backend "local" {}
+  backend "azurerm" {}
 }
 
 data "azurerm_resource_group" "azure_lab" {
