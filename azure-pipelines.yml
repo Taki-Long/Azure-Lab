@@ -54,7 +54,7 @@ stages:
               scriptLocation: inlineScript
               inlineScript: |
                 APIKEY=$(az staticwebapp secrets list --name azure-lab --output json | jq -r '.properties.apiKey')
-                echo '##vso[task.setvariable variable=apiKey;issecret=false]$APIKEY'
+                echo '##vso[task.setvariable variable=apiKey;issecret=false]${APIKEY}'
           - task: Bash@3
             inputs:
               targetType: 'inline'
