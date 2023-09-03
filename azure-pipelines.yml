@@ -54,18 +54,18 @@ stages:
               scriptLocation: inlineScript
               inlineScript: |
                 APIKEY=$(az staticwebapp secrets list --name azure-lab --output json | jq -r '.properties.apiKey')
-                echo '##vso[task.setvariable variable=apiKey;issecret=true]$APIKEY'
+                echo '##vso[task.setvariable variable=apiKey;issecret=false]$APIKEY'
           - task: Bash@3
             inputs:
               targetType: 'inline'
               script: echo '$(apiKey)'
-          - task: AzureStaticWebApp@0
-            displayName: Deploy code
-            inputs:
-              app_location: 'web'
-              skip_app_build: true
-              skip_api_build: true
-              verbose: true
-              deployment_environment: 'dev'
-              production_branch: 'main'
-              azure_static_web_apps_api_token: $(apiKey)
+          # - task: AzureStaticWebApp@0
+          #   displayName: Deploy code
+          #   inputs:
+          #     app_location: 'web'
+          #     skip_app_build: true
+          #     skip_api_build: true
+          #     verbose: true
+          #     deployment_environment: 'dev'
+          #     production_branch: 'main'
+          #     azure_static_web_apps_api_token: $(apiKey)
