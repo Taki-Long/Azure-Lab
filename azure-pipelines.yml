@@ -39,7 +39,7 @@ stages:
             displayName: terraform apply
             inputs:
               command: 'apply'
-              commandOptions: 'main.tfplan -auto-approve'
+              commandOptions: '-auto-approve main.tfplan'
               environmentServiceNameAzureRM: 'arm-subscription'
 
   - stage: DeployStaticWebApp
