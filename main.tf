@@ -2,6 +2,10 @@ terraform {
   backend "azurerm" {}
 }
 
+provider "azurerm" {
+  features {}
+}
+
 data "azurerm_resource_group" "azure_lab" {
   name = "Azure-Lab"
 }
