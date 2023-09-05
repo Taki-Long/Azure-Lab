@@ -77,12 +77,12 @@ stages:
                 echo "##vso[task.setvariable variable=apiKey;issecret=true]${APIKEY}"
           - task: DownloadPipelineArtifact@2
             inputs:
-              artifact: next_static
-              path: next_static_out
+              artifact: next_export
+              path: next_export
           - task: AzureStaticWebApp@0
             displayName: Deploy code
             inputs:
-              app_location: "next_static_out"
+              app_location: "next_export"
               skip_app_build: true
               skip_api_build: true
               verbose: true
