@@ -21,8 +21,9 @@ stages:
               command: install
               workingDir: web
           - task: Npm@1
-            displayName: Npm install
+            displayName: nextjs export
             inputs:
+              command: custom
               customCommand: export
               workingDir: web
           - task: PublishPipelineArtifact@1
