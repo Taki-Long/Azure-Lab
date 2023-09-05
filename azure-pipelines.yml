@@ -6,6 +6,7 @@
 trigger:
   - main
   - dev/*
+  - release/*
 
 pool:
   vmImage: ubuntu-latest
@@ -16,17 +17,18 @@ stages:
       - job: Build
         steps:
           - task: Npm@1
-            displayName: Npm install
+            displayName: Install dependencies
             inputs:
               command: install
               workingDir: web
           - task: Npm@1
-            displayName: nextjs export
+            displayName: Build
             inputs:
               command: custom
               customCommand: run build
               workingDir: web
           - task: PublishPipelineArtifact@1
+            displayName: Publish build artifact
             inputs:
               targetPath: web/out
               artifactName: next_export
@@ -87,5 +89,5 @@ stages:
               skip_api_build: true
               verbose: true
               deployment_environment: "dev"
-              production_branch: "main"
+              production_branch: "release/static-web-app"
               azure_static_web_apps_api_token: $(apiKey)
