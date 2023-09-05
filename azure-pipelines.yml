@@ -24,7 +24,7 @@ stages:
             displayName: nextjs export
             inputs:
               command: custom
-              customCommand: export
+              customCommand: run export
               workingDir: web
           - task: PublishPipelineArtifact@1
             inputs:
