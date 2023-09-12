@@ -5,5 +5,14 @@
   "azureFunctions.projectLanguage": "Python",
   "azureFunctions.projectRuntime": "~4",
   "debug.internalConsoleOptions": "neverOpen",
-  "azureFunctions.projectLanguageModel": 2
+  "azureFunctions.projectLanguageModel": 2,
+  "python.analysis.autoSearchPaths": true,
+  "python.analysis.autoImportCompletions": true,
+  "python.analysis.indexing": true,
+  "python.analysis.packageIndexDepths": [
+    {
+      "name": "azure",
+      "depth": 10
+    }
+  ]
 }

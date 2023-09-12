@@ -23,8 +23,14 @@ resource "azurerm_resource_group" "lab" {
   location = "Central US"
 }
 
+resource "random_string" "resource_code" {
+  length  = 5
+  special = false
+  upper   = false
+}
+
 resource "azurerm_storage_account" "lab" {
-  name                     = "azurelabsa"
+  name                     = "azurelabinfra${random_string.resource_code.result}"
   location                 = azurerm_resource_group.lab.location
   resource_group_name      = azurerm_resource_group.lab.name
   account_tier             = "Standard"
@@ -38,6 +44,7 @@ resource "azurerm_service_plan" "lab" {
   os_type             = "Linux"
   sku_name            = "Y1"
 }
+
 
 resource "azurerm_linux_function_app" "lab" {
   name                = "azure-lab-func"
