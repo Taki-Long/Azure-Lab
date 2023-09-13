@@ -73,3 +73,4 @@ resource "azurerm_static_site" "lab" {
   sku_tier            = "Free"
   sku_size            = "Free"
 }
+
