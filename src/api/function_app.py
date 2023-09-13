@@ -1,12 +1,14 @@
+import json
 import azure.functions as func
 import logging
 import datetime
+import base64
 
 from azure.storage.blob import BlobSasPermissions, generate_blob_sas
 
 app = func.FunctionApp()
 
-@app.route(route="hello", auth_level=func.AuthLevel.ANONYMOUS)
+@app.route(route="hello", auth_level=func.AuthLevel.ANONYMOUS,)
 def hello(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
 
@@ -19,11 +21,14 @@ def hello(req: func.HttpRequest) -> func.HttpResponse:
         else:
             name = req_body.get('name')
 
+    principal_json = base64.b64decode(req.headers.get('x-ms-client-principal')).decode('utf-8')
+    principal = json.loads(principal_json)
+
     if name:
-        return func.HttpResponse(f"Hello, {name}. This HTTP triggered function executed successfully.")
+        return func.HttpResponse(f"Hello, {principal['userDetails']}, you say {name}. This HTTP triggered function executed successfully.")
     else:
         return func.HttpResponse(
-             "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.",
+             f"Hello, {principal['userDetails']}, you say nothing. Pass a name in the query string or in the request body for a personalized response.",
              status_code=200
         )
 
