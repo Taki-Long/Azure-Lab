@@ -18,9 +18,9 @@ provider "azurerm" {
   }
 }
 
-resource "azurerm_resource_group" "lab" {
-  name = "azure-lab-rg"
-  location = "Central US"
+resource "azurerm_resource_group" "rg" {
+  name = "azurelab-rg"
+  location = "East Asia"
 }
 
 resource "random_string" "resource_code" {
@@ -29,48 +29,51 @@ resource "random_string" "resource_code" {
   upper   = false
 }
 
-resource "azurerm_storage_account" "lab" {
+resource "azurerm_storage_account" "sa" {
   name                     = "azurelabinfra${random_string.resource_code.result}"
-  location                 = azurerm_resource_group.lab.location
-  resource_group_name      = azurerm_resource_group.lab.name
+  location                 = azurerm_resource_group.rg.location
+  resource_group_name      = azurerm_resource_group.rg.name
   account_tier             = "Standard"
   account_replication_type = "LRS"
 }
 
-resource "azurerm_service_plan" "lab" {
-  name                = "azure-lab-asp"
-  location            = azurerm_resource_group.lab.location
-  resource_group_name = azurerm_resource_group.lab.name
-  os_type             = "Linux"
-  sku_name            = "Y1"
-}
-
-
-resource "azurerm_linux_function_app" "lab" {
-  name                = "azure-lab-func"
-  location            = azurerm_resource_group.lab.location
-  resource_group_name = azurerm_resource_group.lab.name
-
-  storage_account_name       = azurerm_storage_account.lab.name
-  storage_account_access_key = azurerm_storage_account.lab.primary_access_key
-  service_plan_id            = azurerm_service_plan.lab.id
-
-  identity {
-    type = "SystemAssigned"
-  }
-
-  site_config {
-    application_stack {
-      python_version = "3.10"
-    }
-  }
-}
-
-resource "azurerm_static_site" "lab" {
-  name                = "azure-lab-web"
-  location            = azurerm_resource_group.lab.location
-  resource_group_name = azurerm_resource_group.lab.name
+resource "azurerm_static_site" "web" {
+  name                = "azurelab-web"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
   sku_tier            = "Free"
   sku_size            = "Free"
 }
 
+# resource "azurerm_search_service" "search" {
+#   name                = "azurelab-search-${random_string.resource_code.result}"
+#   resource_group_name = azurerm_resource_group.rg.name
+#   location            = azurerm_resource_group.rg.location
+#   sku                 = "free"
+# }
+
+# resource "azurerm_cognitive_account" "vision" {
+#   name                = "azurelab-vision-${random_string.resource_code.result}"
+#   location            = azurerm_resource_group.rg.location
+#   resource_group_name = azurerm_resource_group.rg.name
+#   sku_name            = "F0"
+#   kind                = "ComputerVision"
+# }
+
+# resource "azurerm_cognitive_account" "speech" {
+#   name                = "azurelab-speech-${random_string.resource_code.result}"
+#   location            = azurerm_resource_group.rg.location
+#   resource_group_name = azurerm_resource_group.rg.name
+#   sku_name            = "F0"
+#   kind                = "SpeechServices"
+# }
+
+# resource "azurerm_cognitive_account" "language" {
+#   name                = "azurelab-language-${random_string.resource_code.result}"
+#   location            = azurerm_resource_group.rg.location
+#   resource_group_name = azurerm_resource_group.rg.name
+#   sku_name            = "F0"
+#   kind                = "TextAnalytics"
+#   custom_question_answering_search_service_id = azurerm_search_service.search.id
+#   custom_question_answering_search_service_key = azurerm_search_service.search.primary_key
+# }
