@@ -23,9 +23,6 @@
           type: 
       ```
     - Run model:
-      ```yaml
-
-      ```
   - APIs:
     - Get /api/workflow/{name} *
       - Response: workflow model
@@ -46,43 +43,4 @@
   - Database:
     - Azure Cosmos DB for MongoDB
 
-  - Actions
-    - Action Type: DataLoader | 
-  
-  - Data Provider
-    - Type
-      - RDBMS
-    - Connection
-
-
-
-
-/{name}/{run_id}/{task_id}/
-
-1. Workflow User Inputs. 定义用户输入. 
-   1. 文件
-   2. 参数
-
-2. 数据存放, 需要一个地方存放workflow 的结果或者中间过程.
-   1. Azure Blob(S3) *
-   2. DataFactory 大数据
-   3. CosmosDB NoSQL
-   4. PostgresSQL RDS
-   
-
-3. 每个tasks智能有1个的输入
-
-
-## UI Workflow Definition:
-
-```yaml
-input:
-  type: LOCAL_CSV_FILE
-tasks:
-  - task1:
-
-
-
-
-```
 
