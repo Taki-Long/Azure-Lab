@@ -12,7 +12,18 @@
   "python.analysis.packageIndexDepths": [
     {
       "name": "azure",
-      "depth": 10
+      "depth": 10,
+    },
+    {
+      "name": "mongoengine",
+      "depth": 10,
+    },
+    {
+      "name": "pymongo",
+      "depth": 10,
     }
-  ]
+  ],
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter"
+  },
 }

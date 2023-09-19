@@ -1,7 +1,7 @@
-import Chatbot from "@/components/ChatWindow";
+import Workflow from "@/components/Workflow";
 
 export default function Home() {
   return (
-    <Chatbot />
+    <Workflow />
   )
 }

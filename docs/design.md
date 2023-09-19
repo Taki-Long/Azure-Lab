@@ -12,17 +12,13 @@
   - Models:
     - Workflow model:
       ```yaml
-      id: str
       name: str
       dag: str
-      parameter:
-        - name: string
-          type: file | string | number
-      tasks: 
-        - {task_name}:
-          type: 
+      actions: 
+        - name: action1
+          type: LOAD_MY_SQL_DATA
+          parameters: {dict}
       ```
-    - Run model:
   - APIs:
     - Get /api/workflow/{name} *
       - Response: workflow model
@@ -44,3 +40,4 @@
     - Azure Cosmos DB for MongoDB
 
 
+CREATE TABLE test (name VARCHAR(20));

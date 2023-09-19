@@ -8,6 +8,7 @@ blueprint = func.Blueprint()
 @blueprint.route(route="hello", auth_level=func.AuthLevel.ANONYMOUS,)
 def hello(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
+    logging.info(req.get_body().decode("utf-8"))
 
     name = req.params.get('name')
     if not name:
@@ -17,19 +18,14 @@ def hello(req: func.HttpRequest) -> func.HttpResponse:
             pass
         else:
             name = req_body.get('name')
-    principal_raw = req.headers.get('x-ms-client-principal')
-    if not principal_raw:
-        return func.HttpResponse(
-             "Unauthorized",
-             status_code=401
-        )
-    principal_json = base64.b64decode(principal_raw).decode('utf-8')
-    principal = json.loads(principal_json)
-
+ 
+   
     if name:
-        return func.HttpResponse(f"Hello, {principal['userDetails']}, you say {name}. This HTTP triggered function executed successfully.")
+        logging.info(f"Hello, you say {name}. This HTTP triggered function executed successfully.")
+        return func.HttpResponse(f"Hello, you say {name}. This HTTP triggered function executed successfully.")
     else:
+        logging.info(f"Hello, you say nothing. Pass a name in the query string or in the request body for a personalized response.")
         return func.HttpResponse(
-             f"Hello, {principal['userDetails']}, you say nothing. Pass a name in the query string or in the request body for a personalized response.",
+             f"Hello, you say nothing. Pass a name in the query string or in the request body for a personalized response.",
              status_code=200
         )
